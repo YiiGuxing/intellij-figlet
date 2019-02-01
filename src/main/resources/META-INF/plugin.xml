@@ -1,0 +1,22 @@
+<idea-plugin url="https://github.com/YiiGuxing/intellij-figlet">
+    <id>cn.yiiguxing.plugin.figlet</id>
+    <name>FIGlet</name>
+    <version>1.0</version>
+    <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
+
+    <description><![CDATA[
+      An ASCII Art generator based on <a href="http://www.figlet.org">FIGlet</a>.
+      <br/>
+      <a href="https://github.com/YiiGuxing/intellij-figlet">Source code</a>
+      <br/>
+      <a href="https://github.com/YiiGuxing/intellij-figlet/issues">Issue tracker</a>
+    ]]></description>
+
+    <idea-version since-build="171"/>
+    <depends>com.intellij.modules.lang</depends>
+    <extensions defaultExtensionNs="com.intellij"/>
+
+    <actions>
+    </actions>
+
+</idea-plugin>
