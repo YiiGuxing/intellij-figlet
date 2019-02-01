@@ -5,7 +5,7 @@
     <vendor email="yii.guxing@gmail.com" url="https://github.com/YiiGuxing">Yii.Guxing</vendor>
 
     <description><![CDATA[
-      An ASCII Art generator based on <a href="http://www.figlet.org">FIGlet</a>.
+      A <a href="http://www.figlet.org">FIGlet</a>-based ASCII Art generator.
       <br/>
       <a href="https://github.com/YiiGuxing/intellij-figlet">Source code</a>
       <br/>
