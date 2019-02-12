@@ -1,8 +1,8 @@
 package cn.yiiguxing.plugin.figlet
 
 import cn.yiiguxing.plugin.figlet.FIGlet.Layout.*
-import com.github.dtmo.jfiglet.FigletRenderer
 import com.github.dtmo.jfiglet.FigFont
+import com.github.dtmo.jfiglet.FigletRenderer
 import com.github.dtmo.jfiglet.LayoutOptions
 import java.lang.Math.max
 import java.lang.Math.min
@@ -16,6 +16,16 @@ object FIGlet {
     private val Int.horizontalSmushingMode get() = this and HORIZONTAL_SMUSHING_MARK
     private val Int.verticalSmushingMode get() = this and VERTICAL_SMUSHING_MARK
     private val Int.verticalSmushingRule get() = this and VERTICAL_SMUSHING_RULE_MARK
+
+    const val DEFAULT_FONT = "Graffiti"
+
+    val FEATURED_FONTS: Array<out String> = arrayOf(
+        DEFAULT_FONT,
+        "Rectangles",
+        "Slant",
+        "Standard",
+        "ANSI Shadow"
+    )
 
     val fonts: Array<out String> = arrayOf(
         "1Row",
