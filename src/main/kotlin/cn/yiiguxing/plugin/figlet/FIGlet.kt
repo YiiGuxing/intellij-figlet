@@ -19,7 +19,7 @@ object FIGlet {
 
     const val DEFAULT_FONT = "Graffiti"
 
-    val FEATURED_FONTS: Array<out String> = arrayOf(
+    val FEATURED_FONTS: List<String> = listOf(
         DEFAULT_FONT,
         "Rectangles",
         "Slant",

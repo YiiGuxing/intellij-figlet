@@ -14,7 +14,9 @@
 
     <idea-version since-build="171"/>
     <depends>com.intellij.modules.lang</depends>
-    <extensions defaultExtensionNs="com.intellij"/>
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.figlet.DataManager"/>
+    </extensions>
 
     <actions>
     </actions>
