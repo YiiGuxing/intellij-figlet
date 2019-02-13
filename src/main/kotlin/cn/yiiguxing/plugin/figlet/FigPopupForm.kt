@@ -2,6 +2,7 @@ package cn.yiiguxing.plugin.figlet
 
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.CollectionComboBoxModel
+import com.intellij.ui.EditorTextField
 import com.intellij.ui.ListCellRendererWrapper
 import javax.swing.JButton
 import javax.swing.JComponent
@@ -11,6 +12,7 @@ import javax.swing.JPanel
 class FigPopupForm {
 
     private lateinit var contentPanel: JPanel
+    private lateinit var inputTextField: EditorTextField
     private lateinit var figFontComboBoxButton1: FigFontComboBoxButton
     private lateinit var verticalLayoutComboBox: ComboBox<FIGlet.Layout>
     private lateinit var horizontalLayoutComboBox: ComboBox<FIGlet.Layout>
