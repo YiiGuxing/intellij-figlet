@@ -27,7 +27,7 @@ object FIGlet {
         "ANSI Shadow"
     )
 
-    val fonts: Array<out String> = arrayOf(
+    val fonts: List<String> = listOf(
         "1Row",
         "3-D",
         "3D Diagonal",

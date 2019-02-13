@@ -29,7 +29,8 @@ class FigPopupForm {
     }
 
     private fun createUIComponents() {
-        figFontComboBoxButton1 = FigFontComboBoxButton()
+        val state = DataManager.instance.state
+        figFontComboBoxButton1 = FigFontComboBoxButton(state.lastUsedFont, state.commonFonts)
         previewComponent = JButton("Hello!")
     }
 
