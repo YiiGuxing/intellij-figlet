@@ -63,7 +63,8 @@ class GenerateASCIIArtDialog(project: Project, defaultInputText: String = "") : 
 
     private inner class Callback : GenerateASCIIArtForm.Callback {
         override fun onUpdate() {
-            pack()
+            validate()
+            window.revalidate()
         }
 
         override fun onGenerateASCIIArtText(
