@@ -139,7 +139,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
                 }
 
                 TransactionGuard.getInstance().submitTransaction(project, transactionId, Runnable {
-                    asciiArtText?.takeIf { it.isNotBlank() }?.let { setResult(it) }
+                    asciiArtText?.let { setResult(it) }
                     error?.let { callback.onError(it) }
                 })
             }, 200)
@@ -149,7 +149,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
     private fun Callback.generateASCIIArtText(): String {
         val inputText = inputTextField.text
         if (inputText.isBlank()) {
-            return inputText
+            return inputText.trim()
         }
 
         val horizontalLayout = horizontalLayoutComboBox.selectedItem as FIGlet.Layout

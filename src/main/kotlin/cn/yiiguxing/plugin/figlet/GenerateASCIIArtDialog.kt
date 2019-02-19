@@ -78,9 +78,13 @@ class GenerateASCIIArtDialog(project: Project, defaultInputText: String = "") : 
         }
 
         override fun onResult(asciiArtText: String) {
-            result = asciiArtText
-            lastUsedFont = form.currentFont
-            isOKActionEnabled = true
+            val hasContent = asciiArtText.isNotEmpty()
+            if (hasContent) {
+                result = asciiArtText
+                lastUsedFont = form.currentFont
+            }
+
+            isOKActionEnabled = hasContent
             setErrorText(null)
         }
 
