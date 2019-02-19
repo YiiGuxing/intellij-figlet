@@ -5,6 +5,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 
 class GenerateASCIIArtAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
-        GenerateASCIIArtDialog(e.project!!).show()
+        GenerateASCIIArtDialog(e.project!!).showAndGetResult()?.let {
+            println(it)
+        }
     }
 }
