@@ -27,6 +27,6 @@ class DataManager : PersistentStateComponent<DataManager.State> {
     }
 
     data class State(var lastUsedFont: String, @CollectionBean var commonFonts: List<String>) {
-        constructor() : this(FIGlet.DEFAULT_FONT, FIGlet.FEATURED_FONTS)
+        constructor() : this(FIGlet.DEFAULT_FONT, ArrayList(FIGlet.FEATURED_FONTS)/* For deserialization */)
     }
 }
