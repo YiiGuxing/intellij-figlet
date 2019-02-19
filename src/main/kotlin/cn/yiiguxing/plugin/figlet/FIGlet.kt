@@ -325,11 +325,18 @@ object FIGlet {
         UNIVERSAL_SMUSHING("Universal Smushing")
     }
 
-    fun generate(text: String, figFont: FigFont, horizontalLayout: Layout, verticalLayout: Layout): String {
+    fun generate(
+        text: String,
+        figFont: FigFont,
+        horizontalLayout: Layout,
+        verticalLayout: Layout,
+        direction: FigFont.PrintDirection = FigFont.PrintDirection.LEFT_TO_RIGHT
+    ): String {
         val renderer = Renderer(figFont).apply {
             val hSmushing = getHorizontalSmushingMode(horizontalLayout)
             val vSmushing = getVerticalSmushingMode(verticalLayout)
             smushMode = hSmushing or vSmushing
+            printDirection = direction
         }
 
         return renderer.renderText(text)
