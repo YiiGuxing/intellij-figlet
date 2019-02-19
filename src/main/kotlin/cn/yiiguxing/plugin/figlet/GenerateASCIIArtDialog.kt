@@ -4,6 +4,7 @@ import com.github.dtmo.jfiglet.FigFont
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.Disposer
+import org.slf4j.LoggerFactory
 import java.util.LinkedHashMap
 import javax.swing.Action
 import javax.swing.JComponent
@@ -68,11 +69,11 @@ class GenerateASCIIArtDialog(project: Project, defaultInputText: String = "") : 
         override fun onGenerateASCIIArtText(
             inputText: String,
             fontName: String,
-            verticalLayout: FIGlet.Layout,
-            horizontalLayout: FIGlet.Layout
+            horizontalLayout: FIGlet.Layout,
+            verticalLayout: FIGlet.Layout
         ): String {
             val figFont = getFigFont(fontName)
-            return FIGlet.generate(inputText, figFont, verticalLayout, horizontalLayout)
+            return FIGlet.generate(inputText, figFont, horizontalLayout, verticalLayout)
         }
 
         override fun onResult(asciiArtText: String) {
@@ -82,12 +83,15 @@ class GenerateASCIIArtDialog(project: Project, defaultInputText: String = "") : 
             setErrorText(null)
         }
 
-        override fun onError(msg: String) {
-            setErrorText(msg)
+        override fun onError(throwable: Throwable) {
+            setErrorText("Cannot generate ASCII art text: ${throwable.message}")
+            LOGGER.error("Cannot generate ASCII art text", throwable)
         }
     }
 
     companion object {
+        private val LOGGER = LoggerFactory.getLogger(GenerateASCIIArtDialog::class.java)
+
         private val figFontCache: MutableMap<String, FigFont> = HashMap()
 
         @Synchronized

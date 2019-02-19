@@ -5,8 +5,12 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CustomShortcutSet
 import com.intellij.openapi.application.TransactionGuard
+import com.intellij.openapi.command.WriteCommandAction
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.event.DocumentAdapter
 import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.openapi.editor.ex.DocumentEx
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileTypes.PlainTextFileType
 import com.intellij.openapi.project.Project
@@ -16,9 +20,9 @@ import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.EditorTextField
 import com.intellij.ui.ListCellRendererWrapper
 import com.intellij.util.Alarm
+import com.intellij.util.ui.JBUI
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
-import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JList
 import javax.swing.JPanel
@@ -31,6 +35,8 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
     private lateinit var verticalLayoutComboBox: ComboBox<FIGlet.Layout>
     private lateinit var horizontalLayoutComboBox: ComboBox<FIGlet.Layout>
     private lateinit var previewComponent: JComponent
+
+    private lateinit var previewViewer: Editor
 
     private val updater: Alarm = Alarm(Alarm.ThreadToUse.POOLED_THREAD, this)
 
@@ -65,7 +71,32 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
 
         val state = DataManager.instance.state
         fontComboBoxButton = FigFontComboBoxButton(state.lastUsedFont, state.commonFonts)
-        previewComponent = JButton("Hello!")
+
+        previewViewer = createPreviewViewer()
+        previewComponent = previewViewer.component
+    }
+
+    private fun createPreviewViewer(): Editor {
+        val editorFactory = EditorFactory.getInstance()
+        val editorDocument = editorFactory.createDocument("\n\n\n\n\n\n\n\n\n")
+            .apply { setReadOnly(true) }
+        val editor = editorFactory.createViewer(editorDocument, project)
+        editor.colorsScheme.editorFontSize = JBUI.scale(12)
+        editor.settings.apply {
+            isCaretRowShown = false
+            isLineNumbersShown = true
+            isWhitespacesShown = true
+            isLineMarkerAreaShown = false
+            isIndentGuidesShown = false
+            isRightMarginShown = true
+            isFoldingOutlineShown = false
+            isAutoCodeFoldingEnabled = false
+            additionalColumnsCount = 0
+            additionalLinesCount = 0
+            setWrapWhenTypingReachesRightMargin(false)
+        }
+
+        return editor
     }
 
     private fun initListeners() {
@@ -94,17 +125,17 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
         updater.cancelAllRequests()
         if (!updater.isDisposed) {
             updater.addRequest({
-                var errorMsg: String? = null
+                var error: Throwable? = null
                 val asciiArtText: String? = try {
                     callback.generateASCIIArtText()
                 } catch (e: Throwable) {
-                    errorMsg = "Cannot generate ASCII art text: ${e.message}"
+                    error = e
                     null
                 }
 
                 TransactionGuard.getInstance().submitTransaction(project, transactionId, Runnable {
                     asciiArtText?.takeIf { it.isNotBlank() }?.let { setResult(it) }
-                    errorMsg?.let { callback.onError(it) }
+                    error?.let { callback.onError(it) }
                 })
             }, 200)
         }
@@ -116,13 +147,21 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
             return inputText
         }
 
-        val verticalLayout = verticalLayoutComboBox.selectedItem as FIGlet.Layout
         val horizontalLayout = horizontalLayoutComboBox.selectedItem as FIGlet.Layout
+        val verticalLayout = verticalLayoutComboBox.selectedItem as FIGlet.Layout
 
-        return onGenerateASCIIArtText(inputText, currentFont, verticalLayout, horizontalLayout)
+        return onGenerateASCIIArtText(inputText, currentFont, horizontalLayout, verticalLayout)
     }
 
     private fun setResult(asciiArtText: String) {
+        WriteCommandAction.runWriteCommandAction(project) {
+            (previewViewer.document as DocumentEx).apply {
+                setReadOnly(false)
+                replaceString(0, textLength, asciiArtText)
+                clearLineModificationFlags()
+                setReadOnly(true)
+            }
+        }
         contentPanel.revalidate()
         callback.onResult(asciiArtText)
     }
@@ -161,13 +200,13 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
         fun onGenerateASCIIArtText(
             inputText: String,
             fontName: String,
-            verticalLayout: FIGlet.Layout,
-            horizontalLayout: FIGlet.Layout
+            horizontalLayout: FIGlet.Layout,
+            verticalLayout: FIGlet.Layout
         ): String
 
         fun onResult(asciiArtText: String)
 
-        fun onError(msg: String)
+        fun onError(throwable: Throwable)
     }
 
 }
