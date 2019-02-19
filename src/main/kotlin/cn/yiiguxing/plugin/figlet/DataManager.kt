@@ -4,11 +4,12 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
+import com.intellij.util.xmlb.annotations.CollectionBean
 
-@State(name = "DataManager", storages = [(Storage("yiiguxing.figlet.xml"))])
+@State(name = "DataManager", storages = [Storage("yiiguxing.figlet.xml")])
 class DataManager : PersistentStateComponent<DataManager.State> {
 
-    val state: State = State(FIGlet.DEFAULT_FONT, FIGlet.FEATURED_FONTS)
+    val state: State = State()
         @JvmName("state") get
 
     override fun getState(): State = state
@@ -25,5 +26,7 @@ class DataManager : PersistentStateComponent<DataManager.State> {
             get() = ServiceManager.getService(DataManager::class.java)
     }
 
-    data class State(var lastUsedFont: String, var commonFonts: List<String>)
+    data class State(var lastUsedFont: String, @CollectionBean var commonFonts: List<String>) {
+        constructor() : this(FIGlet.DEFAULT_FONT, FIGlet.FEATURED_FONTS)
+    }
 }
