@@ -21,6 +21,7 @@ import com.intellij.ui.EditorTextField
 import com.intellij.ui.ListCellRendererWrapper
 import com.intellij.util.Alarm
 import com.intellij.util.ui.JBUI
+import java.awt.Dimension
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import javax.swing.JComponent
@@ -73,7 +74,11 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
         fontComboBoxButton = FigFontComboBoxButton(state.lastUsedFont, state.commonFonts)
 
         previewViewer = createPreviewViewer()
-        previewComponent = previewViewer.component
+        previewComponent = previewViewer.component.apply {
+            val preSize = preferredSize
+            minimumSize = Dimension(0, preSize.height)
+            preferredSize = Dimension(preSize)
+        }
     }
 
     private fun createPreviewViewer(): Editor {
