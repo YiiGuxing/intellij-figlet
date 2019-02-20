@@ -3,99 +3,18 @@ package cn.yiiguxing.plugin.figlet
 import com.github.dtmo.jfiglet.FigFont
 import com.github.dtmo.jfiglet.FigletRenderer
 import com.github.dtmo.jfiglet.LayoutOptions
-import java.util.*
-import kotlin.collections.ArrayList
 
 class FixedFigletRenderer(private val figFont: FigFont) : FigletRenderer(figFont) {
 
     val horizontalSmushingMode get() = smushMode.horizontalSmushingMode
     val verticalSmushingMode get() = smushMode.verticalSmushingMode
 
-    private fun renderTextFigLines(inputText: String): List<MutableList<String>> {
+    override fun renderText(inputText: String): String {
         val text = inputText.replace("\r\n?".toRegex(), "\n")
             .replace("[^\\x00-\\xff]+".toRegex(), "")
-        val result = LinkedList<ArrayList<String>>()
-        val rowBuilders: Array<out StringBuilder> = Array(figFont.height) { StringBuilder() }
-
-        var prevChar = 0.toChar()
-        for (charIndex in 0 until text.length) {
-            var character = text[charIndex]
-
-            // Treat tabs and spaces as spaces, and all other whitespace characters as
-            // newlines.
-            if (Character.isWhitespace(character)) {
-                character = if (character == '\t' || character == ' ') ' ' else '\n'
-            }
-
-            // Skip over unprintable characters.
-            if (character > 0.toChar() && character < ' ' && character != '\n' || character.toInt() == 127) {
-                continue
-            }
-
-            if (character != '\n') {
-                val smushAmount = figFont.calculateOverlapAmount(prevChar, character, smushMode, printDirection)
-                val figChar = figFont.getFigCharacter(character) ?: continue
-
-                for (row in 0 until figFont.height) {
-                    val rowBuilder = rowBuilders[row]
-                    if (rowBuilder.isNotEmpty()) {
-                        if (printDirection == FigFont.PrintDirection.LEFT_TO_RIGHT) {
-                            // Smush the new FIGcharacter onto the right of the previous FIGcharacter.
-                            for (smushColumn in 0 until smushAmount) {
-                                val smushIndex = rowBuilder.length - (smushColumn + 1)
-                                val figCharacter = figChar.getCharacterAt(smushAmount - (smushColumn + 1), row)
-                                val smushemChar =
-                                    figFont.smushem(rowBuilder[smushIndex], figCharacter, smushMode, printDirection)
-                                rowBuilder.setCharAt(smushIndex, smushemChar)
-                            }
-                            rowBuilder.append(figChar.getRow(row).substring(smushAmount))
-                        } else {
-                            // Smush the new FIGcharacter into the left of the previous FIGcharacter.
-                            for (smushColumn in 0 until smushAmount) {
-                                val figCharacter =
-                                    figChar.getCharacterAt(figChar.width - smushAmount + smushColumn, row)
-                                val smushemChar =
-                                    figFont.smushem(rowBuilder[smushColumn], figCharacter, smushMode, printDirection)
-                                rowBuilder.setCharAt(smushColumn, smushemChar)
-                            }
-                            rowBuilder.insert(0, figChar.getRow(row).substring(0, figChar.width - smushAmount))
-                        }
-                    } else {
-                        rowBuilder.append(figChar.getRow(row))
-                    }
-                }
-
-                prevChar = character
-            } else {
-                // We've encountered a newline. We need to render the current buffer and then
-                // start a new one.
-                val figLine = ArrayList<String>(rowBuilders.size)
-                for (rowBuilder in rowBuilders) {
-                    figLine.add(rowBuilder.toString().replace(figFont.hardBlankChar, ' '))
-                }
-                result.add(figLine)
-
-                for (row in 0 until figFont.height) {
-                    rowBuilders[row].setLength(0)
-                }
-
-                prevChar = 0.toChar()
-            }
-        }
-
-        if (rowBuilders[0].isNotEmpty()) {
-            val figLine = ArrayList<String>(rowBuilders.size)
-            for (rowBuilder in rowBuilders) {
-                figLine.add(rowBuilder.toString().replace(figFont.hardBlankChar, ' '))
-            }
-            result.add(figLine)
-        }
-
-        return result
-    }
-
-    override fun renderText(text: String): String {
-        val figLines = renderTextFigLines(text)
+        val figLines = super.renderText(text)
+            .lines()
+            .chunked(figFont.height)
         if (figLines.isEmpty()) {
             return ""
         }
@@ -123,6 +42,15 @@ class FixedFigletRenderer(private val figFont: FigFont) : FigletRenderer(figFont
 
         private const val RULE2_STR = "|/\\[]{}()<>"
         private const val RULE3_CLASSES = "| /\\ [] {} () <>"
+
+        private fun <T> List<T>.chunked(count: Int): List<MutableList<T>> {
+            val result = ArrayList<MutableList<T>>()
+            for (i in 0 until size step count) {
+                result.add(subList(i, Math.min(i + count, size)).toMutableList())
+            }
+
+            return result
+        }
 
         private fun smushVerticalFigLines(
             figLine1: MutableList<String>,
