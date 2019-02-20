@@ -2,7 +2,9 @@ package cn.yiiguxing.plugin.figlet
 
 import cn.yiiguxing.plugin.figlet.FIGlet.Layout.*
 import com.github.dtmo.jfiglet.FigFont
+import com.github.dtmo.jfiglet.FigFontReader
 import com.github.dtmo.jfiglet.LayoutOptions
+import java.io.InputStreamReader
 
 object FIGlet {
 
@@ -363,9 +365,8 @@ object FIGlet {
     }
 
     fun loadFigFont(fontName: String): FigFont {
-        return FIGlet::class.java
-            .getResourceAsStream("/fonts/$fontName.flf")
-            .use { FigFont.loadFigFont(it) }
+        val inputStream = FIGlet::class.java.getResourceAsStream("/fonts/$fontName.flf")
+        return InputStreamReader(inputStream, Charsets.UTF_8).use { FigFontReader(it).readFont() }
     }
 
 }
