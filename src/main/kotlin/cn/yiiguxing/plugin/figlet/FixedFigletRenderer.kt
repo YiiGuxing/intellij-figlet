@@ -13,6 +13,7 @@ class FixedFigletRenderer(private val figFont: FigFont) : FigletRenderer(figFont
 
     private fun renderTextFigLines(inputText: String): List<MutableList<String>> {
         val text = inputText.replace("\r\n?".toRegex(), "\n")
+            .replace("[^\\x00-\\xff]+".toRegex(), "")
         val result = LinkedList<ArrayList<String>>()
         val rowBuilders: Array<out StringBuilder> = Array(figFont.height) { StringBuilder() }
 
