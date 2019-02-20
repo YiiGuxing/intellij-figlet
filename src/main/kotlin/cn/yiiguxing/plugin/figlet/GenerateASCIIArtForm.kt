@@ -47,7 +47,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
 
     val component: JComponent get() = contentPanel
 
-    val preferredFocusedComponent: JComponent? get() = inputTextField.takeIf { defaultInputText.isBlank() }
+    val preferredFocusedComponent: JComponent? get() = inputTextField
 
     init {
         val renderer = LayoutRenderer()
