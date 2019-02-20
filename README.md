@@ -6,8 +6,11 @@ _/ ____\__|/  _____/|  |   _____/  |_
  |__|  |__|\______  /____/\___  >__|  
                   \/          \/      
 ```
+[![Jetbrains Plugins](https://img.shields.io/badge/JetBrainsPlugin-12005-orange.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/12005-figlet)
 [![LICENSE](https://img.shields.io/github/license/YiiGuxing/intellij-figlet.svg?style=flat-square)](https://github.com/YiiGuxing/intellij-figlet/blob/master/LICENSE)
-[![release](https://img.shields.io/github/release/YiiGuxing/intellij-figlet.svg?style=flat-square)](https://github.com/YiiGuxing/intellij-figlet/releases/latest)
+[![GitHub release](https://img.shields.io/github/release/YiiGuxing/intellij-figlet.svg?style=flat-square)](https://github.com/YiiGuxing/intellij-figlet/releases/latest)
+[![Version](https://img.shields.io/jetbrains/plugin/v/12005.svg?style=flat-square&colorB=0091ea)](https://plugins.jetbrains.com/plugin/12005-figlet)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/12005.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/12005-figlet)
 -----
 
 A [FIGlet](http://www.figlet.org)-based ASCII Art generation plugin for IntelliJ based IDEs.
