@@ -148,8 +148,8 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
 
     private fun Callback.generateASCIIArtText(): String {
         val inputText = inputTextField.text
-        if (inputText.isBlank()) {
-            return inputText.trim()
+        if (inputText.isEmpty()) {
+            return inputText
         }
 
         val horizontalLayout = horizontalLayoutComboBox.selectedItem as FIGlet.Layout
