@@ -67,7 +67,7 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
         g as Graphics2D
         super.paint(g)
 
-        val x = (width - JBUI.scale(10) - insets.right + 1).toDouble()
+        val x = (width - JBUI.scale(20)).toDouble()
         val y = (height - JBUI.scale(5.0f)) * 0.5
         g.translate(x, y)
 
