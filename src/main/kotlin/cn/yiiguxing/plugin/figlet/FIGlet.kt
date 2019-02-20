@@ -321,7 +321,7 @@ object FIGlet {
         verticalLayout: Layout,
         direction: FigFont.PrintDirection = FigFont.PrintDirection.LEFT_TO_RIGHT
     ): String {
-        val renderer = FixedSmushingFigletRenderer(figFont).apply {
+        val renderer = FixedFigletRenderer(figFont).apply {
             val hSmushing = getHorizontalSmushingMode(horizontalLayout)
             val vSmushing = getVerticalSmushingMode(verticalLayout)
             smushMode = hSmushing or vSmushing
@@ -331,7 +331,7 @@ object FIGlet {
         return renderer.renderText(text)
     }
 
-    private fun FixedSmushingFigletRenderer.getHorizontalSmushingMode(layout: Layout): Int {
+    private fun FixedFigletRenderer.getHorizontalSmushingMode(layout: Layout): Int {
         return when (layout) {
             DEFAULT -> horizontalSmushingMode
             FULL -> 0
@@ -347,7 +347,7 @@ object FIGlet {
         }
     }
 
-    private fun FixedSmushingFigletRenderer.getVerticalSmushingMode(layout: Layout): Int {
+    private fun FixedFigletRenderer.getVerticalSmushingMode(layout: Layout): Int {
         return when (layout) {
             DEFAULT -> verticalSmushingMode
             FULL -> 0
