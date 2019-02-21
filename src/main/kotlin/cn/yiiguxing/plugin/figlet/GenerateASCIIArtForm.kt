@@ -76,6 +76,8 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
         previewViewer = createPreviewViewer()
         previewComponent = previewViewer.component.apply {
             val preSize = preferredSize
+            val maxPreferredHeight = JBUI.scale(300)
+            preSize.height = minOf(preSize.height, maxPreferredHeight)
             minimumSize = Dimension(0, preSize.height)
             preferredSize = Dimension(preSize)
         }
@@ -86,7 +88,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
         val editorDocument = editorFactory.createDocument("\n\n\n\n\n\n\n\n\n")
             .apply { setReadOnly(true) }
         val editor = editorFactory.createViewer(editorDocument, project)
-        editor.colorsScheme.editorFontSize = JBUI.scale(12)
+        editor.colorsScheme.editorFontSize = JBUI.scale(Settings.instance.previewFontSize)
         editor.settings.apply {
             isCaretRowShown = false
             isLineNumbersShown = true
