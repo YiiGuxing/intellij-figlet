@@ -6,7 +6,7 @@ _/ ____\__|/  _____/|  |   _____/  |_
  |__|  |__|\______  /____/\___  >__|  
                   \/          \/      
 ```
-![FIGlet](./icon.svg)
+[![FIGlet](./icon.svg)](https://github.com/YiiGuxing/intellij-figlet)
 [![Jetbrains Plugins](https://img.shields.io/badge/JetBrainsPlugin-12005-orange.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/12005-figlet)
 [![LICENSE](https://img.shields.io/github/license/YiiGuxing/intellij-figlet.svg?style=flat-square)](https://github.com/YiiGuxing/intellij-figlet/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/YiiGuxing/intellij-figlet.svg?style=flat-square)](https://github.com/YiiGuxing/intellij-figlet/releases/latest)
