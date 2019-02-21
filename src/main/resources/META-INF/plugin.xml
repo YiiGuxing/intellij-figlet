@@ -16,6 +16,7 @@
     <depends>com.intellij.modules.lang</depends>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="cn.yiiguxing.plugin.figlet.DataManager"/>
+        <applicationService serviceImplementation="cn.yiiguxing.plugin.figlet.Settings"/>
     </extensions>
 
     <actions>
