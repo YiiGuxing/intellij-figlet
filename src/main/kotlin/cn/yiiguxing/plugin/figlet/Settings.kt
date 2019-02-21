@@ -5,7 +5,7 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 
-@State(name = "Settings", storages = [Storage("yiiguxing.figlet.xml")])
+@State(name = "FigletSettings", storages = [Storage("yiiguxing.figlet.xml")])
 class Settings : PersistentStateComponent<Settings> {
 
     var trimOutput: Boolean = true
