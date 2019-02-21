@@ -21,9 +21,35 @@ class GenerateASCIIArtAction : EditorAction(GenerateASCIIArtHandler()) {
         override fun doExecute(editor: Editor, caret: Caret?, dataContext: DataContext?) {
             val project = editor.project ?: return
             val selectedText = editor.selectionModel.selectedText ?: ""
-            val asciiArtText = GenerateASCIIArtDialog(project, selectedText).showAndGetResult() ?: return
+            var asciiArtText = GenerateASCIIArtDialog(project, selectedText).showAndGetResult() ?: return
+
+            if (Settings.instance.trimOutput) {
+                asciiArtText = asciiArtText.trimArtText()
+            }
 
             execute(editor, dataContext, Producer<Transferable> { TextTransferable(asciiArtText) })
+        }
+
+        private fun String.trimArtText(): String {
+            if (isBlank()) {
+                return ""
+            }
+
+            val figLines = lines()
+            if (figLines.size == 1) {
+                return this
+            }
+
+            var start = 0
+            var end = figLines.size
+            for (i in figLines.indices) {
+                if (figLines[i].isBlank()) start++ else break
+            }
+            for (i in figLines.indices.reversed()) {
+                if (figLines[i].isBlank()) end-- else break
+            }
+
+            return figLines.subList(start, end).joinToString("\n")
         }
     }
 }
