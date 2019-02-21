@@ -174,6 +174,14 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
     }
 
     override fun dispose() {
+        EditorFactory.getInstance().apply {
+            inputTextField.editor?.let { editor ->
+                if (!editor.isDisposed) {
+                    releaseEditor(editor)
+                }
+            }
+            releaseEditor(previewViewer)
+        }
     }
 
 
