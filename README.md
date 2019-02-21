@@ -1,5 +1,3 @@
-<p align="center"><img src="./icon.svg" width="200" height="200" alt="FIGlet"></p>
-
 ```
   _____.__  ________.__          __   
 _/ ____\__|/  _____/|  |   _____/  |_ 
@@ -8,6 +6,7 @@ _/ ____\__|/  _____/|  |   _____/  |_
  |__|  |__|\______  /____/\___  >__|  
                   \/          \/      
 ```
+![screenshots](./icon.svg)
 [![Jetbrains Plugins](https://img.shields.io/badge/JetBrainsPlugin-12005-orange.svg?style=flat-square)](https://plugins.jetbrains.com/plugin/12005-figlet)
 [![LICENSE](https://img.shields.io/github/license/YiiGuxing/intellij-figlet.svg?style=flat-square)](https://github.com/YiiGuxing/intellij-figlet/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/YiiGuxing/intellij-figlet.svg?style=flat-square)](https://github.com/YiiGuxing/intellij-figlet/releases/latest)
