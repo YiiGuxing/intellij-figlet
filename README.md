@@ -1,3 +1,5 @@
+<p align="center"><img src="./icon.svg" width="200" height="200" alt="FIGlet"></p>
+
 ```
   _____.__  ________.__          __   
 _/ ____\__|/  _____/|  |   _____/  |_ 
