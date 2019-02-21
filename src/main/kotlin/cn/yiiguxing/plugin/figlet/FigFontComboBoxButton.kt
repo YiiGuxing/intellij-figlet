@@ -41,25 +41,31 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
         addMouseListener(object : MouseAdapter() {
             override fun mouseClicked(event: MouseEvent) {
                 if (event.clickCount == 1) {
-                    showPopupAt(event.x)
+                    showPopup(event.x)
                     event.consume()
                 }
             }
         })
+        addActionListener { showPopup() }
     }
 
     fun onFontChanged(handler: ((font: String) -> Unit)?) {
         onFontChangedHandler = handler
     }
 
-    private fun showPopupAt(position: Int) {
+    private fun showPopup(position: Int? = null) {
         if (popup?.isDisposed == false) {
             return
         }
 
-        popup = JBPopupFactory.getInstance().createListPopup(popupStep, 30)
+        val factory = JBPopupFactory.getInstance()
+        popup = factory.createListPopup(popupStep, 30)
             .apply {
-                show(RelativePoint(this@FigFontComboBoxButton, Point(position, visibleRect.height)))
+                if (position == null) {
+                    show(factory.guessBestPopupLocation(this@FigFontComboBoxButton))
+                } else {
+                    show(RelativePoint(this@FigFontComboBoxButton, Point(position, visibleRect.height)))
+                }
             }
     }
 
