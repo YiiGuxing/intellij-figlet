@@ -24,6 +24,8 @@ import com.intellij.util.ui.JBUI
 import java.awt.Dimension
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 import javax.swing.JComponent
 import javax.swing.JList
 import javax.swing.JPanel
@@ -124,6 +126,17 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
         }
         verticalLayoutComboBox.addItemListener(itemListener)
         horizontalLayoutComboBox.addItemListener(itemListener)
+
+        val listener = object : KeyAdapter() {
+            override fun keyPressed(e: KeyEvent) {
+                if (e.keyCode == KeyEvent.VK_ENTER) {
+                    (e.source as ComboBox<*>).apply { isPopupVisible = !isPopupVisible }
+                    e.consume()
+                }
+            }
+        }
+        verticalLayoutComboBox.addKeyListener(listener)
+        horizontalLayoutComboBox.addKeyListener(listener)
     }
 
     private fun update() {
@@ -174,14 +187,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
     }
 
     override fun dispose() {
-        EditorFactory.getInstance().apply {
-            inputTextField.editor?.let { editor ->
-                if (!editor.isDisposed) {
-                    releaseEditor(editor)
-                }
-            }
-            releaseEditor(previewViewer)
-        }
+        EditorFactory.getInstance().releaseEditor(previewViewer)
     }
 
 
@@ -190,6 +196,11 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
 
         init {
             isOneLineMode = false
+        }
+
+        override fun addNotify() {
+            super.addNotify()
+            (editor as? EditorEx)?.setPlaceholder("Write something here.")
         }
 
         override fun updateBorder(editor: EditorEx) {
