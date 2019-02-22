@@ -32,7 +32,7 @@ Usage
 -----
 
 1. Select the text you want to convert on the editor (Optional).
-2. <kbd>Alt + Insert</kbd> > <kbd>ASCII Art</kbd> or <kbd>Main menu</kbd> > <kbd>Code</kbd> > <kbd>Generate...</kbd> > <kbd>ASCII Art</kbd>.
+2. <kbd>Alt + Insert</kbd> > <kbd>ASCII Art...</kbd> or <kbd>Main menu</kbd> > <kbd>Code</kbd> > <kbd>Generate...</kbd> > <kbd>ASCII Art...</kbd>.
 3. Click the <kbd>Generate ASCII Art Text</kbd> button.
 
 ![screenshots](./screenshots.gif)
