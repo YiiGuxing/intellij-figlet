@@ -9,7 +9,6 @@ import com.intellij.ui.awt.RelativePoint
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.*
-import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.GeneralPath
 import javax.swing.JButton
@@ -21,6 +20,7 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
     private val arrowShape = createArrowShape()
     private val popupStep = FigFontStep(commonFonts.toMutableList().apply { add(MORE) })
     private var popup: ListPopup? = null
+    private var popupLocation: Int? = null
     private var onFontChangedHandler: ((String) -> Unit)? = null
 
     var currentFont: String
@@ -38,22 +38,23 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
         margin = JBUI.insets(margins.top, 10, margins.bottom, 30)
         horizontalAlignment = SwingConstants.LEFT
 
-        addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(event: MouseEvent) {
-                if (event.clickCount == 1) {
-                    showPopup(event.x)
-                    event.consume()
-                }
-            }
-        })
         addActionListener { showPopup() }
+    }
+
+    override fun processMouseEvent(e: MouseEvent) {
+        try {
+            popupLocation = e.x.takeIf { e.id == MouseEvent.MOUSE_RELEASED }
+            super.processMouseEvent(e)
+        } finally {
+            popupLocation = null
+        }
     }
 
     fun onFontChanged(handler: ((font: String) -> Unit)?) {
         onFontChangedHandler = handler
     }
 
-    private fun showPopup(position: Int? = null) {
+    private fun showPopup() {
         if (popup?.isDisposed == false) {
             return
         }
@@ -61,11 +62,9 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
         val factory = JBPopupFactory.getInstance()
         popup = factory.createListPopup(popupStep, 30)
             .apply {
-                if (position == null) {
-                    show(factory.guessBestPopupLocation(this@FigFontComboBoxButton))
-                } else {
-                    show(RelativePoint(this@FigFontComboBoxButton, Point(position, visibleRect.height)))
-                }
+                popupLocation?.let { location ->
+                    show(RelativePoint(this@FigFontComboBoxButton, Point(location, visibleRect.height)))
+                } ?: show(factory.guessBestPopupLocation(this@FigFontComboBoxButton))
             }
     }
 
