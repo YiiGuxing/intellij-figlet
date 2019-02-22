@@ -20,7 +20,9 @@
     </extensions>
 
     <actions>
-        <action class="cn.yiiguxing.plugin.figlet.GenerateASCIIArtAction" text="ASCII Art">
+        <action class="cn.yiiguxing.plugin.figlet.GenerateASCIIArtAction"
+                description="Generate ASCII Art"
+                text="ASCII Art...">
             <add-to-group group-id="GenerateGroup"/>
         </action>
     </actions>
