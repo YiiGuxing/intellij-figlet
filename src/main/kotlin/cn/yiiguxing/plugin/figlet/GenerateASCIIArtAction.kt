@@ -24,32 +24,10 @@ class GenerateASCIIArtAction : EditorAction(GenerateASCIIArtHandler()) {
             var asciiArtText = GenerateASCIIArtDialog(project, selectedText).showAndGetResult() ?: return
 
             if (Settings.instance.trimOutput) {
-                asciiArtText = asciiArtText.trimArtText()
+                asciiArtText = FIGlet.trimArtText(asciiArtText)
             }
 
             execute(editor, dataContext, Producer<Transferable> { TextTransferable(asciiArtText) })
-        }
-
-        private fun String.trimArtText(): String {
-            if (isBlank()) {
-                return ""
-            }
-
-            val figLines = lines()
-            if (figLines.size == 1) {
-                return this
-            }
-
-            var start = 0
-            var end = figLines.size
-            for (i in figLines.indices) {
-                if (figLines[i].isBlank()) start++ else break
-            }
-            for (i in figLines.indices.reversed()) {
-                if (figLines[i].isBlank()) end-- else break
-            }
-
-            return figLines.subList(start, end).joinToString("\n")
         }
     }
 }

@@ -321,8 +321,8 @@ object FIGlet {
     fun generate(
         text: String,
         figFont: FigFont,
-        horizontalLayout: Layout,
-        verticalLayout: Layout,
+        horizontalLayout: Layout = Layout.DEFAULT,
+        verticalLayout: Layout = Layout.DEFAULT,
         direction: FigFont.PrintDirection = FigFont.PrintDirection.LEFT_TO_RIGHT
     ): String {
         val renderer = FixedFigletRenderer(figFont).apply {
@@ -371,7 +371,6 @@ object FIGlet {
         return InputStreamReader(inputStream, Charsets.UTF_8).use { FigFontReader(it).readFont() }
     }
 
-
     @Synchronized
     fun getFigFont(name: String): FigFont {
         return fontCache.getOrPut(name) { FIGlet.loadFigFont(name) }
@@ -382,6 +381,28 @@ object FIGlet {
         val reservedFont = reserved?.let { fontCache[it] }
         fontCache.clear()
         reservedFont?.let { fontCache[reserved] = it }
+    }
+
+    fun trimArtText(artText: String): String {
+        if (artText.isBlank()) {
+            return ""
+        }
+
+        val figLines = artText.lines()
+        if (figLines.size == 1) {
+            return artText
+        }
+
+        var start = 0
+        var end = figLines.size
+        for (i in figLines.indices) {
+            if (figLines[i].isBlank()) start++ else break
+        }
+        for (i in figLines.indices.reversed()) {
+            if (figLines[i].isBlank()) end-- else break
+        }
+
+        return figLines.subList(start, end).joinToString("\n")
     }
 
 }
