@@ -13,9 +13,14 @@ import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBDimension
 import org.slf4j.LoggerFactory
+import java.awt.Component
 import javax.swing.JComponent
 
-class TestAllFontsDialog(project: Project, private val text: String = "Test") : DialogWrapper(project) {
+class TestAllFontsDialog(
+    project: Project,
+    parent: Component,
+    private val text: String = "Test"
+) : DialogWrapper(parent, false) {
 
     private val testModel = CollectionListModel<TestItem>(ArrayList(NUMBER_OF_FONTS))
     private val testList = JBList<TestItem>(testModel)
@@ -85,7 +90,15 @@ class TestAllFontsDialog(project: Project, private val text: String = "Test") : 
         }
 
         private fun onTestFont(fontName: String) {
-            // TODO: test font
+            val font = FIGlet.getFigFont(fontName)
+            val artText = FIGlet.generate(text, font)
+            val effectText = FIGlet.trimArtText(artText)
+            val testItem = TestItem(fontName, effectText)
+            ApplicationManager.getApplication().invokeLater {
+                if (!disposed) {
+                    testModel.add(testItem)
+                }
+            }
         }
 
         override fun onThrowable(error: Throwable) {
