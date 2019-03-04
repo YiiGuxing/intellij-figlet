@@ -19,7 +19,11 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
 
     private val isUnderDarcula = UIUtil.isUnderDarcula()
     private val arrowShape = createArrowShape()
-    private val popupStep = FigFontStep(commonFonts.toMutableList().apply { add(MORE) })
+    private val popupStep = FigFontStep(commonFonts.toMutableList()
+        .apply {
+            add(MORE)
+            add(TEST_ALL)
+        })
     private var popup: ListPopup? = null
     private var popupLocation: Int? = null
     private var onFontChangedHandler: ((String) -> Unit)? = null
@@ -90,7 +94,7 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
     }
 
     companion object {
-        private const val MORE = "More"
+        private const val MORE = "more"
         private const val TEST_ALL = "Test All..."
 
         private fun createArrowShape(): Shape {
@@ -112,11 +116,11 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
         override fun isSpeedSearchEnabled(): Boolean = true
 
         override fun hasSubstep(selectedValue: String): Boolean {
-            return selectedValue == MORE || selectedValue == TEST_ALL
+            return selectedValue == MORE
         }
 
         override fun getSeparatorAbove(value: String): ListSeparator? {
-            return if (value == MORE) ListSeparator() else null
+            return if (value == TEST_ALL) ListSeparator() else null
         }
 
         override fun onChosen(selectedValue: String, finalChoice: Boolean): PopupStep<*>? {
