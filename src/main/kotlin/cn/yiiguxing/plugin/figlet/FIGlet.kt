@@ -308,6 +308,8 @@ object FIGlet {
         "Wow"
     )
 
+    private val fontCache: MutableMap<String, FigFont> = HashMap()
+
     enum class Layout(val displayName: String) {
         DEFAULT("Default"),
         FULL("Full"),
@@ -367,6 +369,19 @@ object FIGlet {
     fun loadFigFont(fontName: String): FigFont {
         val inputStream = FIGlet::class.java.getResourceAsStream("/fonts/$fontName.flf")
         return InputStreamReader(inputStream, Charsets.UTF_8).use { FigFontReader(it).readFont() }
+    }
+
+
+    @Synchronized
+    fun getFigFont(name: String): FigFont {
+        return fontCache.getOrPut(name) { FIGlet.loadFigFont(name) }
+    }
+
+    @Synchronized
+    fun clearFontCache(reserved: String? = null) {
+        val reservedFont = reserved?.let { fontCache[it] }
+        fontCache.clear()
+        reservedFont?.let { fontCache[reserved] = it }
     }
 
 }

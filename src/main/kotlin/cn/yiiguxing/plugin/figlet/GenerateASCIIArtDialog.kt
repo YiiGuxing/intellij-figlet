@@ -1,14 +1,14 @@
 package cn.yiiguxing.plugin.figlet
 
-import com.github.dtmo.jfiglet.FigFont
+import cn.yiiguxing.plugin.figlet.FIGlet.clearFontCache
+import cn.yiiguxing.plugin.figlet.FIGlet.getFigFont
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.Disposer
 import org.slf4j.LoggerFactory
-import java.util.LinkedHashMap
+import java.util.*
 import javax.swing.Action
 import javax.swing.JComponent
-import kotlin.collections.HashMap
 import kotlin.collections.set
 
 class GenerateASCIIArtDialog(project: Project, defaultInputText: String = "") : DialogWrapper(project) {
@@ -44,7 +44,7 @@ class GenerateASCIIArtDialog(project: Project, defaultInputText: String = "") : 
         if (isOk) {
             saveCommonFontsAndLastUsedFont()
         }
-        clearFontCache()
+        clearFontCache(DataManager.instance.state.lastUsedFont)
 
         return result?.takeIf { isOk }
     }
@@ -96,20 +96,5 @@ class GenerateASCIIArtDialog(project: Project, defaultInputText: String = "") : 
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(GenerateASCIIArtDialog::class.java)
-
-        private val figFontCache: MutableMap<String, FigFont> = HashMap()
-
-        @Synchronized
-        private fun getFigFont(name: String): FigFont {
-            return figFontCache.getOrPut(name) { FIGlet.loadFigFont(name) }
-        }
-
-        @Synchronized
-        private fun clearFontCache() {
-            val lastFontName = DataManager.instance.state.lastUsedFont
-            val lastFont = figFontCache[lastFontName]
-            figFontCache.clear()
-            lastFont?.let { figFontCache[lastFontName] = it }
-        }
     }
 }
