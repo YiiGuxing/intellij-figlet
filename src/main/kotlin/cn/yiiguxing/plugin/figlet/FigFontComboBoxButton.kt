@@ -1,5 +1,6 @@
 package cn.yiiguxing.plugin.figlet
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.ui.popup.ListSeparator
@@ -22,6 +23,7 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
     private var popup: ListPopup? = null
     private var popupLocation: Int? = null
     private var onFontChangedHandler: ((String) -> Unit)? = null
+    private var onTestHandler: (() -> String?)? = null
 
     var currentFont: String
         get() = text ?: FIGlet.DEFAULT_FONT
@@ -54,6 +56,10 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
         onFontChangedHandler = handler
     }
 
+    fun onTestAllFont(handler: (() -> String?)?) {
+        onTestHandler = handler
+    }
+
     private fun showPopup() {
         if (popup?.isDisposed == false) {
             return
@@ -84,7 +90,8 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
     }
 
     companion object {
-        private const val MORE = "more"
+        private const val MORE = "More"
+        private const val TEST_ALL = "Test All..."
 
         private fun createArrowShape(): Shape {
             return GeneralPath().apply {
@@ -105,7 +112,7 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
         override fun isSpeedSearchEnabled(): Boolean = true
 
         override fun hasSubstep(selectedValue: String): Boolean {
-            return selectedValue == MORE
+            return selectedValue == MORE || selectedValue == TEST_ALL
         }
 
         override fun getSeparatorAbove(value: String): ListSeparator? {
@@ -117,7 +124,15 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
                 selectedValue == MORE -> AllFigFontStep().apply {
                     defaultOptionIndex = FIGlet.fonts.indexOf(currentFont)
                 }
+
+                selectedValue == TEST_ALL -> doFinalStep {
+                    ApplicationManager.getApplication().invokeLater {
+                        onTestHandler?.invoke()?.let { currentFont = it }
+                    }
+                }
+
                 finalChoice -> doFinalStep { currentFont = selectedValue }
+
                 else -> PopupStep.FINAL_CHOICE
             }
         }

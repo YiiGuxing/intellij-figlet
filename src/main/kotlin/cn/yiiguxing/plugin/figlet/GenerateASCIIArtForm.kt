@@ -124,6 +124,10 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
                 update()
             }
         }
+        fontComboBoxButton.onTestAllFont {
+            val testText = inputTextField.text?.trim()?.takeIf { it.isNotEmpty() } ?: "Test"
+            TestAllFontsDialog(project, testText).showAndGetResult()
+        }
         verticalLayoutComboBox.addItemListener(itemListener)
         horizontalLayoutComboBox.addItemListener(itemListener)
 
