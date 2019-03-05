@@ -34,7 +34,7 @@ class TestAllFontsDialog(project: Project, parent: Component) : DialogWrapper(pa
 
     init {
         init()
-        title = "Test All Fonts"
+        title = "Fonts"
         setOKButtonText("Use Font")
         isOKActionEnabled = false
 
