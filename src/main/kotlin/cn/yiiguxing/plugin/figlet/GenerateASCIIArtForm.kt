@@ -72,7 +72,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
         inputTextField = TextField(defaultInputText, project)
 
         val state = DataManager.instance.state
-        fontComboBoxButton = FigFontComboBoxButton(state.lastUsedFont, state.commonFonts)
+        fontComboBoxButton = FigFontComboBoxButton(project, state.lastUsedFont, state.commonFonts)
 
         previewViewer = Previews.createPreviewViewer(project, "\n\n\n\n\n\n\n\n\n")
         previewComponent = previewViewer.component.apply {
@@ -99,10 +99,6 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
             if (it.stateChange == ItemEvent.SELECTED) {
                 update()
             }
-        }
-        fontComboBoxButton.onTestAllFont {
-            val testText = inputTextField.text?.trim()?.takeIf { it.isNotEmpty() } ?: "Test"
-            TestAllFontsDialog(project, contentPanel, testText).showAndGetResult()
         }
         verticalLayoutComboBox.addItemListener(itemListener)
         horizontalLayoutComboBox.addItemListener(itemListener)

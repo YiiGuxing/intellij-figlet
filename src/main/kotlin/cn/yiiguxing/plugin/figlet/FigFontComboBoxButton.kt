@@ -1,6 +1,6 @@
 package cn.yiiguxing.plugin.figlet
 
-import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.ui.popup.ListPopup
 import com.intellij.openapi.ui.popup.ListSeparator
@@ -15,7 +15,11 @@ import java.awt.geom.GeneralPath
 import javax.swing.JButton
 import javax.swing.SwingConstants
 
-class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JButton(currentFont) {
+class FigFontComboBoxButton(
+    private val project: Project,
+    currentFont: String,
+    commonFonts: List<String>
+) : JButton(currentFont) {
 
     private val isUnderDarcula = UIUtil.isUnderDarcula()
     private val arrowShape = createArrowShape()
@@ -27,7 +31,6 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
     private var popup: ListPopup? = null
     private var popupLocation: Int? = null
     private var onFontChangedHandler: ((String) -> Unit)? = null
-    private var onTestHandler: (() -> String?)? = null
 
     var currentFont: String
         get() = text ?: FIGlet.DEFAULT_FONT
@@ -58,10 +61,6 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
 
     fun onFontChanged(handler: ((font: String) -> Unit)?) {
         onFontChangedHandler = handler
-    }
-
-    fun onTestAllFont(handler: (() -> String?)?) {
-        onTestHandler = handler
     }
 
     private fun showPopup() {
@@ -130,9 +129,9 @@ class FigFontComboBoxButton(currentFont: String, commonFonts: List<String>) : JB
                 }
 
                 selectedValue == TEST_ALL -> doFinalStep {
-                    ApplicationManager.getApplication().invokeLater {
-                        onTestHandler?.invoke()?.let { currentFont = it }
-                    }
+                    TestAllFontsDialog(project, this@FigFontComboBoxButton)
+                        .showAndGetResult()
+                        ?.let { currentFont = it }
                 }
 
                 finalChoice -> doFinalStep { currentFont = selectedValue }
