@@ -7,7 +7,6 @@ import com.intellij.openapi.actionSystem.CustomShortcutSet
 import com.intellij.openapi.application.TransactionGuard
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.EditorFactory
 import com.intellij.openapi.editor.event.DocumentAdapter
 import com.intellij.openapi.editor.event.DocumentEvent
 import com.intellij.openapi.editor.ex.DocumentEx
@@ -75,7 +74,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
         val state = DataManager.instance.state
         fontComboBoxButton = FigFontComboBoxButton(state.lastUsedFont, state.commonFonts)
 
-        previewViewer = createPreviewViewer()
+        previewViewer = Previews.createPreviewViewer(project, "\n\n\n\n\n\n\n\n\n")
         previewComponent = previewViewer.component.apply {
             val preSize = preferredSize
             val maxPreferredHeight = JBUI.scale(300)
@@ -83,29 +82,6 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
             minimumSize = Dimension(0, preSize.height)
             preferredSize = Dimension(preSize)
         }
-    }
-
-    private fun createPreviewViewer(): Editor {
-        val editorFactory = EditorFactory.getInstance()
-        val editorDocument = editorFactory.createDocument("\n\n\n\n\n\n\n\n\n")
-            .apply { setReadOnly(true) }
-        val editor = editorFactory.createViewer(editorDocument, project)
-        editor.colorsScheme.editorFontSize = JBUI.scale(Settings.instance.previewFontSize)
-        editor.settings.apply {
-            isCaretRowShown = false
-            isLineNumbersShown = true
-            isWhitespacesShown = true
-            isLineMarkerAreaShown = false
-            isIndentGuidesShown = false
-            isRightMarginShown = true
-            isFoldingOutlineShown = false
-            isAutoCodeFoldingEnabled = false
-            additionalColumnsCount = 0
-            additionalLinesCount = 0
-            setWrapWhenTypingReachesRightMargin(false)
-        }
-
-        return editor
     }
 
     private fun initListeners() {
@@ -191,7 +167,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
     }
 
     override fun dispose() {
-        EditorFactory.getInstance().releaseEditor(previewViewer)
+        Previews.releasePreviewViewer(previewViewer)
     }
 
 
