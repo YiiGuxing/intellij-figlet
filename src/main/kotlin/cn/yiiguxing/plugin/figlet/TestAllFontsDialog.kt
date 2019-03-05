@@ -44,8 +44,8 @@ class TestAllFontsDialog(project: Project, parent: Component) : DialogWrapper(pa
 
     private fun initList(project: Project) = with(testList) {
         setPaintBusy(true)
-        background = JBColor(0xE8E8E8, 0x4C5052)
         selectionModel = SingleSelectionModel()
+        background = JBColor(0xE8E8E8, 0x4C5052)
         addListSelectionListener {
             isOKActionEnabled = testList.selectedValue != null
         }
@@ -85,15 +85,21 @@ class TestAllFontsDialog(project: Project, parent: Component) : DialogWrapper(pa
                 }
 
                 if (isSelected) {
-                    title.foreground = list.selectionForeground
-                    item.foreground = list.selectionForeground
-                    item.background = list.selectionBackground
-                    viewer.component.background = list.selectionBackground
+                    val foreground = list.selectionForeground
+                    title.foreground = foreground
+                    item.foreground = foreground
+
+                    val background = list.selectionBackground
+                    item.background = background
+                    viewer.component.background = background
                 } else {
-                    title.foreground = list.foreground
-                    item.foreground = list.foreground
-                    item.background = list.background
-                    viewer.component.background = list.background
+                    val foreground = list.foreground
+                    title.foreground = foreground
+                    item.foreground = foreground
+
+                    val background = list.background
+                    item.background = background
+                    viewer.component.background = background
                 }
 
                 item.revalidate()
@@ -114,10 +120,7 @@ class TestAllFontsDialog(project: Project, parent: Component) : DialogWrapper(pa
 
     override fun createCenterPanel(): JComponent {
         return JBScrollPane(testList)
-            .apply {
-                preferredSize = JBDimension(600, 750)
-                //border = JBUI.Borders.customLine(JBColor(0xD0D0D0, 0x555555), 1)
-            }
+            .apply { preferredSize = JBDimension(600, 750) }
     }
 
     fun showAndGetResult(): String? {
