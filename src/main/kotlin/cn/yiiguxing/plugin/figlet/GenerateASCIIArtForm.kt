@@ -4,11 +4,12 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CustomShortcutSet
-import com.intellij.openapi.application.TransactionGuard
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.editor.event.DocumentAdapter
 import com.intellij.openapi.editor.event.DocumentEvent
+import com.intellij.openapi.editor.event.DocumentListener
 import com.intellij.openapi.editor.ex.DocumentEx
 import com.intellij.openapi.editor.ex.EditorEx
 import com.intellij.openapi.fileTypes.PlainTextFileType
@@ -17,7 +18,7 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.wm.IdeFocusManager
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.EditorTextField
-import com.intellij.ui.ListCellRendererWrapper
+import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.util.Alarm
 import com.intellij.util.ui.JBUI
 import java.awt.Dimension
@@ -48,7 +49,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
 
     val component: JComponent get() = contentPanel
 
-    val preferredFocusedComponent: JComponent? get() = inputTextField
+    val preferredFocusedComponent: JComponent get() = inputTextField
 
     init {
         val renderer = LayoutRenderer()
@@ -91,7 +92,7 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
             }
         }.registerCustomShortcutSet(CustomShortcutSet.fromString("shift TAB"), inputTextField)
 
-        inputTextField.addDocumentListener(object : DocumentAdapter() {
+        inputTextField.addDocumentListener(object : DocumentListener {
             override fun documentChanged(e: DocumentEvent) = update()
         })
         fontComboBoxButton.onFontChanged { update() }
@@ -117,7 +118,6 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
 
     private fun update() {
         callback.onUpdate()
-        val transactionId = TransactionGuard.getInstance().contextTransaction
         updater.cancelAllRequests()
         if (!updater.isDisposed) {
             updater.addRequest({
@@ -129,10 +129,10 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
                     null
                 }
 
-                TransactionGuard.getInstance().submitTransaction(project, transactionId, Runnable {
+                ApplicationManager.getApplication().invokeLater({
                     asciiArtText?.let { setResult(it) }
                     error?.let { callback.onError(it) }
-                })
+                }, ModalityState.stateForComponent(contentPanel))
             }, 200)
         }
     }
@@ -174,9 +174,10 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
             isOneLineMode = false
         }
 
-        override fun addNotify() {
-            super.addNotify()
-            (editor as? EditorEx)?.setPlaceholder("Write something here.")
+        override fun createEditor(): EditorEx {
+            return super.createEditor().apply {
+                setPlaceholder("Write something here.")
+            }
         }
 
         override fun updateBorder(editor: EditorEx) {
@@ -184,15 +185,16 @@ class GenerateASCIIArtForm(private val project: Project, private val defaultInpu
         }
     }
 
-    private class LayoutRenderer : ListCellRendererWrapper<FIGlet.Layout>() {
+    private class LayoutRenderer : SimpleListCellRenderer<FIGlet.Layout>() {
+
         override fun customize(
-            list: JList<*>?,
+            list: JList<out FIGlet.Layout>,
             value: FIGlet.Layout?,
             index: Int,
             selected: Boolean,
             hasFocus: Boolean
         ) {
-            setText(value?.displayName)
+            text = value?.displayName
         }
     }
 

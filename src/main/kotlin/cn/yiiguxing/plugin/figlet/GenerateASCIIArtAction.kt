@@ -5,9 +5,7 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.editor.Caret
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.actionSystem.EditorAction
-import com.intellij.util.Producer
 import com.intellij.util.ui.TextTransferable
-import java.awt.datatransfer.Transferable
 
 
 class GenerateASCIIArtAction : EditorAction(GenerateASCIIArtHandler()) {
@@ -27,7 +25,7 @@ class GenerateASCIIArtAction : EditorAction(GenerateASCIIArtHandler()) {
                 asciiArtText = FIGlet.trimArtText(asciiArtText)
             }
 
-            execute(editor, dataContext, Producer<Transferable> { TextTransferable(asciiArtText) })
+            execute(editor, dataContext) { TextTransferable(asciiArtText as CharSequence) }
         }
     }
 }
