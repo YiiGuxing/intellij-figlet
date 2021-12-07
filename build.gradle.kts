@@ -21,11 +21,11 @@ repositories {
 
 dependencies {
     testImplementation("junit:junit:4.13.2")
-    implementation("com.github.dtmo.jfiglet:jfiglet:1.0.0")
+    implementation("com.github.dtmo.jfiglet:jfiglet:1.0.1")
 }
 
 intellij {
-    pluginName.set(properties("pluginName"))
+    pluginName.set("FIGlet")
     version.set(properties("platformVersion"))
     type.set(properties("platformType"))
 }
