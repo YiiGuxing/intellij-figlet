@@ -1,7 +1,7 @@
 package cn.yiiguxing.plugin.figlet
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 
@@ -25,6 +25,6 @@ class Settings : PersistentStateComponent<Settings> {
 
     companion object {
         val instance: Settings
-            get() = ServiceManager.getService(Settings::class.java)
+            get() = ApplicationManager.getApplication().getService(Settings::class.java)
     }
 }

@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.popup.ListSeparator
 import com.intellij.openapi.ui.popup.PopupStep
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep
 import com.intellij.ui.awt.RelativePoint
+import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
 import java.awt.*
@@ -81,8 +82,8 @@ class FigFontComboBoxButton(
         g as Graphics2D
         super.paint(g)
 
-        val x = (width - JBUI.scale(20)).toDouble()
-        val y = (height - JBUI.scale(5.0f)) * 0.5
+        val x = (width - JBUIScale.scale(20)).toDouble()
+        val y = (height - JBUIScale.scale(5.0f)) * 0.5
         g.translate(x, y)
 
         if (!isUnderDarcula) {
@@ -99,8 +100,8 @@ class FigFontComboBoxButton(
         private fun createArrowShape(): Shape {
             return GeneralPath().apply {
                 moveTo(0.0f, 0.0f)
-                lineTo(JBUI.scale(10.0f), 0.0f)
-                lineTo(JBUI.scale(5.0f), 5.0f)
+                lineTo(JBUIScale.scale(10.0f), 0.0f)
+                lineTo(JBUIScale.scale(5.0f), 5.0f)
                 closePath()
             }
         }

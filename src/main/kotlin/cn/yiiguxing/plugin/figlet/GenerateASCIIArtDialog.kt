@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.util.Disposer
 import org.slf4j.LoggerFactory
-import java.util.*
 import javax.swing.Action
 import javax.swing.JComponent
 import kotlin.collections.set
@@ -31,12 +30,12 @@ class GenerateASCIIArtDialog(project: Project, defaultInputText: String = "") : 
         Disposer.register(disposable, form)
     }
 
-    override fun createCenterPanel(): JComponent? = form.component
+    override fun createCenterPanel(): JComponent = form.component
 
     override fun createActions(): Array<Action> = arrayOf(okAction, cancelAction)
 
-    override fun getPreferredFocusedComponent(): JComponent? {
-        return form.preferredFocusedComponent ?: super.getPreferredFocusedComponent()
+    override fun getPreferredFocusedComponent(): JComponent {
+        return form.preferredFocusedComponent
     }
 
     fun showAndGetResult(): String? {
